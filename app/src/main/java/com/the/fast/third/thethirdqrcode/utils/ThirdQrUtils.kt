@@ -30,24 +30,16 @@ import com.the.fast.third.thethirdqrcode.lib_zxing.decoding.DecodeFormatManager
 import java.io.OutputStream
 
 object ThirdQrUtils {
-    fun analyzeBitmap(bitmap: Bitmap,analyzeCallback: CodeUtils.AnalyzeCallback?) {
+    fun analyzeBitmap(bitmap: Bitmap, analyzeCallback: CodeUtils.AnalyzeCallback?) {
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         options.inJustDecodeBounds = false
-        var sampleSize = (options.outHeight / 400f).toInt()
-        if (sampleSize <= 0) sampleSize = 1
-        options.inSampleSize = sampleSize
-        val multiFormatReader = MultiFormatReader()
-        val hints = Hashtable<DecodeHintType, Any?>(2)
-        var decodeFormats = Vector<BarcodeFormat?>()
-        if (decodeFormats.isEmpty()) {
-            decodeFormats = Vector()
-            decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS)
-            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS)
-            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS)
+        var sampleSize = calculateSampleSize(options.outHeight)
+        val decodeFormats = getDecodeFormats()
+        val hints = createDecodeHints(decodeFormats)
+        val multiFormatReader = MultiFormatReader().apply {
+            setHints(hints)
         }
-        hints[DecodeHintType.POSSIBLE_FORMATS] = decodeFormats
-        multiFormatReader.setHints(hints)
         var rawResult: Result? = null
         try {
             rawResult = multiFormatReader.decodeWithState(
@@ -67,26 +59,100 @@ object ThirdQrUtils {
         }
     }
 
+    private fun calculateSampleSize(outHeight: Int): Int {
+        var sampleSize = (outHeight / 400f).toInt()
+        if (sampleSize <= 0) sampleSize = 1
+        return sampleSize
+    }
+
+    private fun getDecodeFormats(): Vector<BarcodeFormat?> {
+        val decodeFormats = Vector<BarcodeFormat?>()
+        if (decodeFormats.isEmpty()) {
+            decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS)
+            decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS)
+            decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS)
+        }
+        return decodeFormats
+    }
+
+    private fun createDecodeHints(decodeFormats: Vector<BarcodeFormat?>): Hashtable<DecodeHintType, Any?> {
+        val hints = Hashtable<DecodeHintType, Any?>(2)
+        hints[DecodeHintType.POSSIBLE_FORMATS] = decodeFormats
+        return hints
+    }
+
     fun generateQrCodeFromText(text: String,w:Int,h:Int): Bitmap {
         return CodeUtils.createImage(text, w, h, null)
     }
 
 
-    fun saveBitmapToGallery(context: Context,bitmap: Bitmap): Boolean {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    context as Activity,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    2333
-                )
-                return false
-            }
+//    fun saveBitmapToGallery(context: Context,bitmap: Bitmap): Boolean {
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+//            if (ContextCompat.checkSelfPermission(
+//                    context,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                ) != PackageManager.PERMISSION_GRANTED
+//            ) {
+//                ActivityCompat.requestPermissions(
+//                    context as Activity,
+//                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                    2333
+//                )
+//                return false
+//            }
+//        }
+//        val filename = "${System.currentTimeMillis()}.jpg"
+//        val contentValues = ContentValues().apply {
+//            put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+//            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+//                put(MediaStore.Images.Media.IS_PENDING, 1)
+//            }
+//        }
+//
+//        val resolver = context.contentResolver
+//        val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+//
+//        try {
+//            imageUri?.let {
+//                val outputStream: OutputStream? = resolver.openOutputStream(it)
+//                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
+//                outputStream.close()
+//                Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
+//                return true
+//            }
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//
+//        return false
+//    }
+    fun Context.hasWriteExternalStoragePermission(): Boolean {
+        return if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
         }
+    }
+
+    fun Activity.requestWriteExternalStoragePermission(requestCode: Int) {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            requestCode
+        )
+    }
+
+    fun Context.saveBitmapToGallery(bitmap: Bitmap, onSaveComplete: (Boolean) -> Unit) {
+        if (!hasWriteExternalStoragePermission()) {
+            onSaveComplete(false)
+            return
+        }
+
         val filename = "${System.currentTimeMillis()}.jpg"
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, filename)
@@ -97,7 +163,7 @@ object ThirdQrUtils {
             }
         }
 
-        val resolver = context.contentResolver
+        val resolver = contentResolver
         val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
         try {
@@ -105,14 +171,15 @@ object ThirdQrUtils {
                 val outputStream: OutputStream? = resolver.openOutputStream(it)
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
                 outputStream.close()
-                Toast.makeText(context, "Saved successfully", Toast.LENGTH_SHORT).show()
-                return true
+                Toast.makeText(this, "Saved successfully", Toast.LENGTH_SHORT).show()
+                onSaveComplete(true)
+                return
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        return false
+        onSaveComplete(false)
     }
 
     fun shareBitmap(bitmap: Bitmap,context: Context) {

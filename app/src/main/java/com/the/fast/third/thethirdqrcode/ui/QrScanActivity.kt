@@ -13,7 +13,6 @@ import com.the.fast.third.thethirdqrcode.databinding.ActivityQrsacnBinding
 import com.the.fast.third.thethirdqrcode.lib_zxing.activity.CaptureFragment
 import com.the.fast.third.thethirdqrcode.lib_zxing.activity.CodeUtils
 import com.the.fast.third.thethirdqrcode.utils.BlackHelp
-import com.the.fast.third.thethirdqrcode.utils.ThirdQrUtils
 
 class QrScanActivity : AppCompatActivity() {
     val binding : ActivityQrsacnBinding by lazy {
@@ -62,7 +61,7 @@ class QrScanActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.type = "image/*"
-        startActivityForResult(intent, 0x1454)
+        startActivityForResult(intent, 0x9527)
     }
     fun toClickFlash(){
         isOpen =!isOpen
@@ -84,7 +83,7 @@ class QrScanActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0x1454) {
+        if (requestCode == 0x9527) {
             if (data != null) {
                 val uri: Uri? = data.data
                 val cr = contentResolver
