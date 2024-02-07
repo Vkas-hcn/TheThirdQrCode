@@ -33,11 +33,7 @@ class ResultActivity : AppCompatActivity() {
             bitmap?.let { it1 -> ThirdQrUtils.saveBitmapToGallery(this, it1) }
         }
         binding.tvShare.setOnClickListener {
-            val intent = Intent()
-            intent.action = Intent.ACTION_SEND
-            intent.putExtra(Intent.EXTRA_TEXT, BlackHelp.scan_data)
-            intent.type = "text/plain"
-            startActivity(Intent.createChooser(intent, "Share"))
+            bitmap?.let { it1 -> ThirdQrUtils.shareBitmap(it1,this) }
         }
 
         bitmap = ThirdQrUtils.generateQrCodeFromText(BlackHelp.create_data, dp2px(270), dp2px(270))

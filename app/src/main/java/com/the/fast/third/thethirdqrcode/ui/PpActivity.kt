@@ -20,7 +20,6 @@ class PpActivity  : AppCompatActivity() {
         }
     }
     private fun initWebView() {
-
         binding.webView.loadUrl("https://www.baidu.com")
         binding.webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {

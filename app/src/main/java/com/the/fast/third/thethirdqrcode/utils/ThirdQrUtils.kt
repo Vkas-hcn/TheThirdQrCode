@@ -82,7 +82,7 @@ object ThirdQrUtils {
                 ActivityCompat.requestPermissions(
                     context as Activity,
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    10001
+                    2333
                 )
                 return false
             }
@@ -113,5 +113,30 @@ object ThirdQrUtils {
         }
 
         return false
+    }
+
+    fun shareBitmap(bitmap: Bitmap,context: Context) {
+        val uri: Uri = getImageUri(context, bitmap)
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "image/*"
+        shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+        context.startActivity(Intent.createChooser(shareIntent, "Share Image"))
+    }
+
+
+    private fun getImageUri(context: Context, bitmap: Bitmap): Uri {
+        val filesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val imageFile = File(filesDir, "shared_image.png")
+
+        try {
+            val outputStream = FileOutputStream(imageFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.flush()
+            outputStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return FileProvider.getUriForFile(context, context.packageName + ".fileprovider", imageFile)
     }
 }

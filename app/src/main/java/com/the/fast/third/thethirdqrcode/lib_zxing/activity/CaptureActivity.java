@@ -11,11 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.the.fast.third.thethirdqrcode.R;
 
-/**
- * Initial the camera
- * <p>
- * 默认的二维码扫描Activity
- */
+
 public class CaptureActivity extends AppCompatActivity {
 
 
@@ -40,9 +36,6 @@ public class CaptureActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * 二维码解析回调函数
-     */
     CodeUtils.AnalyzeCallback analyzeCallback = new CodeUtils.AnalyzeCallback() {
         @Override
         public void onAnalyzeSuccess(Bitmap mBitmap, String result) {

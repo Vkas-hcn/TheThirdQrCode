@@ -28,10 +28,7 @@ import com.the.fast.third.thethirdqrcode.lib_zxing.decoding.DecodeFormatManager;
 import java.util.Hashtable;
 import java.util.Vector;
 
-/**
- * Created by aaron on 16/7/27.
- * 二维码扫描工具类
- */
+
 public class CodeUtils {
 
     public static final String RESULT_TYPE = "result_type";
@@ -43,19 +40,14 @@ public class CodeUtils {
 
 
 
-    /**
-     * 解析二维码图片工具类
-     * @param analyzeCallback
-     */
+
     public static void analyzeBitmap(String path, AnalyzeCallback analyzeCallback) {
 
-        /**
-         * 首先判断图片的大小,若图片过大,则执行图片的裁剪操作,防止OOM
-         */
+
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true; // 先获取原大小
+        options.inJustDecodeBounds = true;
         Bitmap mBitmap = BitmapFactory.decodeFile(path, options);
-        options.inJustDecodeBounds = false; // 获取新的大小
+        options.inJustDecodeBounds = false;
 
         int sampleSize = (int) (options.outHeight / (float) 400);
 
@@ -66,25 +58,17 @@ public class CodeUtils {
 
         MultiFormatReader multiFormatReader = new MultiFormatReader();
 
-        // 解码的参数
         Hashtable<DecodeHintType, Object> hints = new Hashtable<DecodeHintType, Object>(2);
-        // 可以解析的编码类型
         Vector<BarcodeFormat> decodeFormats = new Vector<BarcodeFormat>();
         if (decodeFormats == null || decodeFormats.isEmpty()) {
             decodeFormats = new Vector<BarcodeFormat>();
-
-            // 这里设置可扫描的类型，我这里选择了都支持
             decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.QR_CODE_FORMATS);
             decodeFormats.addAll(DecodeFormatManager.DATA_MATRIX_FORMATS);
         }
         hints.put(DecodeHintType.POSSIBLE_FORMATS, decodeFormats);
-        // 设置继续的字符编码格式为UTF8
-        // hints.put(DecodeHintType.CHARACTER_SET, "UTF8");
-        // 设置解析配置参数
         multiFormatReader.setHints(hints);
 
-        // 开始对图像资源解码
         Result rawResult = null;
         try {
             rawResult = multiFormatReader.decodeWithState(new BinaryBitmap(new HybridBinarizer(new BitmapLuminanceSource(mBitmap))));
@@ -103,14 +87,6 @@ public class CodeUtils {
         }
     }
 
-    /**
-     * 生成二维码图片
-     * @param text
-     * @param w
-     * @param h
-     * @param logo
-     * @return
-     */
     public static Bitmap createImage(String text,int w,int h,Bitmap logo) {
         if (TextUtils.isEmpty(text)) {
             return null;
@@ -177,9 +153,6 @@ public class CodeUtils {
         return result;
     }
 
-    /**
-     * 解析二维码结果
-     */
     public interface AnalyzeCallback{
 
         public void onAnalyzeSuccess(Bitmap mBitmap, String result);
@@ -187,12 +160,6 @@ public class CodeUtils {
         public void onAnalyzeFailed();
     }
 
-
-    /**
-     * 为CaptureFragment设置layout参数
-     * @param captureFragment
-     * @param layoutId
-     */
     public static void setFragmentArgs(CaptureFragment captureFragment, int layoutId) {
         if (captureFragment == null || layoutId == -1) {
             return;

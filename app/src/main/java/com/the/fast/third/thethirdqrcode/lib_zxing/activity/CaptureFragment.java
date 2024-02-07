@@ -30,9 +30,7 @@ import com.the.fast.third.thethirdqrcode.lib_zxing.view.ViewfinderView;
 import java.io.IOException;
 import java.util.Vector;
 
-/**
- * 自定义实现的扫描Fragment
- */
+
 public class CaptureFragment extends Fragment implements SurfaceHolder.Callback {
 
     private CaptureActivityHandler handler;
@@ -130,8 +128,6 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
      */
     public void handleDecode(Result result, Bitmap barcode) {
         inactivityTimer.onActivity();
-        playBeepSoundAndVibrate();
-
         if (result == null || TextUtils.isEmpty(result.getText())) {
             if (analyzeCallback != null) {
                 analyzeCallback.onAnalyzeFailed();
@@ -203,17 +199,7 @@ public class CaptureFragment extends Fragment implements SurfaceHolder.Callback 
 
 
 
-    private static final long VIBRATE_DURATION = 200L;
 
-    private void playBeepSoundAndVibrate() {
-        if (playBeep && mediaPlayer != null) {
-            mediaPlayer.start();
-        }
-        if (vibrate) {
-            Vibrator vibrator = (Vibrator) getActivity().getSystemService(getActivity().VIBRATOR_SERVICE);
-            vibrator.vibrate(VIBRATE_DURATION);
-        }
-    }
 
     /**
      * When the beep has finished playing, rewind to queue up another one.

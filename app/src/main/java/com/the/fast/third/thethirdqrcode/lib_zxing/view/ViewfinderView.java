@@ -32,15 +32,12 @@ import android.view.View;
 
 import com.google.zxing.ResultPoint;
 import com.the.fast.third.thethirdqrcode.R;
-import com.the.fast.third.thethirdqrcode.lib_zxing.DisplayUtil;
 import com.the.fast.third.thethirdqrcode.lib_zxing.camera.CameraManager;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-/**
- * 自定义组件实现,扫描功能
- */
+
 public final class ViewfinderView extends View {
 
     private static final long ANIMATION_DELAY = 100L;
@@ -78,42 +75,24 @@ public final class ViewfinderView extends View {
         initInnerRect(context, attrs);
     }
 
-    /**
-     * 初始化内部框的大小
-     *
-     * @param context
-     * @param attrs
-     */
     private void initInnerRect(Context context, AttributeSet attrs) {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ViewfinderView);
-
-        // 扫描框距离顶部
         float innerMarginTop = ta.getDimension(R.styleable.ViewfinderView_inner_margintop, -1);
         if (innerMarginTop != -1) {
             CameraManager.FRAME_MARGINTOP = (int) innerMarginTop;
         }
+        CameraManager.FRAME_WIDTH = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, 200);
+        CameraManager.FRAME_HEIGHT = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, 200);
 
-        // 扫描框的宽度
-        CameraManager.FRAME_WIDTH = (int) ta.getDimension(R.styleable.ViewfinderView_inner_width, DisplayUtil.screenWidthPx / 2);
-
-        // 扫描框的高度
-        CameraManager.FRAME_HEIGHT = (int) ta.getDimension(R.styleable.ViewfinderView_inner_height, DisplayUtil.screenWidthPx / 2);
-
-        // 扫描框边角颜色
         innercornercolor = ta.getColor(R.styleable.ViewfinderView_inner_corner_color, Color.parseColor("#45DDDD"));
-        // 扫描框边角长度
         innercornerlength = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_length, 65);
-        // 扫描框边角宽度
         innercornerwidth = (int) ta.getDimension(R.styleable.ViewfinderView_inner_corner_width, 15);
 
-        // 扫描bitmap
         Drawable drawable = ta.getDrawable(R.styleable.ViewfinderView_inner_scan_bitmap);
         if (drawable != null) {
         }
 
-        // 扫描控件
         scanLight = BitmapFactory.decodeResource(getResources(), ta.getResourceId(R.styleable.ViewfinderView_inner_scan_bitmap, R.drawable.scan_light));
-        // 扫描速度
         SCAN_VELOCITY = ta.getInt(R.styleable.ViewfinderView_inner_scan_speed, 5);
 
         isCircle = ta.getBoolean(R.styleable.ViewfinderView_inner_scan_iscircle, true);
@@ -178,21 +157,12 @@ public final class ViewfinderView extends View {
         }
     }
 
-    // 扫描线移动的y
     private int scanLineTop;
-    // 扫描线移动速度
     private int SCAN_VELOCITY;
-    // 扫描线
     private Bitmap scanLight;
-    // 是否展示小圆点
     private boolean isCircle;
 
-    /**
-     * 绘制移动扫描线
-     *
-     * @param canvas
-     * @param frame
-     */
+
     private void drawScanLight(Canvas canvas, Rect frame) {
 
         if (scanLineTop == 0) {
@@ -210,27 +180,16 @@ public final class ViewfinderView extends View {
     }
 
 
-    // 扫描框边角颜色
     private int innercornercolor;
-    // 扫描框边角长度
     private int innercornerlength;
-    // 扫描框边角宽度
     private int innercornerwidth;
 
-    /**
-     * 绘制取景框边框
-     *
-     * @param canvas
-     * @param frame
-     */
     private void drawFrameBounds(Canvas canvas, Rect frame) {
 
         paint.setColor(Color.TRANSPARENT);
         paint.setStrokeWidth(0);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-
-        // 绘制带有圆角的矩形边框
-        float radius = 20; // 圆角半径，根据需求设置
+        float radius = 20;
         RectF rectF = new RectF(frame.left, frame.top, frame.right, frame.bottom);
         canvas.drawRoundRect(rectF, radius, radius, paint);
 

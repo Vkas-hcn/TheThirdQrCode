@@ -46,7 +46,7 @@ class App:Application() {
 
     private fun retry(it: String,context: Context) {
         GlobalScope.launch(Dispatchers.IO) {
-            delay(10001)
+            delay(2333)
             Log.e("TAG", "The blacklist request failed：$it")
             getBlackList(context)
         }

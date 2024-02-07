@@ -28,10 +28,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
-/**
- * This thread does all the heavy lifting of decoding the images.
- * �����߳�
- */
+
 final class DecodeThread extends Thread {
 
     public static final String BARCODE_BITMAP = "barcode_bitmap";
