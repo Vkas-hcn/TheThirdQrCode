@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.MainActivity">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:text="Qr Scanner"
+            android:textColor="#FF000000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Setting"
+            android:textStyle="bold"
+            android:textColor="#FF393939"
+            android:textSize="12sp"
+            android:layout_marginEnd="16dp"
+            android:padding="10dp"
+            android:gravity="center"
+            android:drawableStart="@drawable/icon_setting"
+            android:drawablePadding="4dp"
+            android:background="@drawable/bg_set"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView" />
+
+        <ImageView
+            android:id="@+id/img_sacn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="44dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_main_left"
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            tools:layout_editor_absoluteX="15dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="Qr Scan"
+            android:textColor="#FFFFFFFF"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/textView2"
+            app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="33dp"
+            android:background="@drawable/bg_start"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="8dp"
+            android:text="Start"
+            android:layout_marginEnd="21dp"
+            android:textColor="#FFFFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/img_sacn"
+            app:layout_constraintTop_toTopOf="@+id/img_sacn" />
+
+        <ImageView
+            android:id="@+id/imgCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_main_right"
+            app:layout_constraintBottom_toBottomOf="@+id/img_sacn"
+            app:layout_constraintEnd_toEndOf="@+id/img_sacn" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Creat Qr"
+            android:textColor="#FFFFFFFF"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgCreate"
+            app:layout_constraintEnd_toStartOf="@+id/textView4"
+            app:layout_constraintTop_toTopOf="@+id/imgCreate" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="21dp"
+            android:background="@drawable/bg_enter"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="8dp"
+            android:text="Enter"
+            android:textColor="#FF393939"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgCreate"
+            app:layout_constraintEnd_toEndOf="@+id/imgCreate"
+            app:layout_constraintTop_toTopOf="@+id/imgCreate" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
