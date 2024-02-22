@@ -68,15 +68,14 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, QrScanActivity::class.java))
     }
 
+
+
     private fun showPermissionDeniedDialog() {
         AlertDialog.Builder(this)
             .setTitle("Permission denied")
             .setMessage("You need to grant camera permissions to use this feature")
             .setPositiveButton("Go to settings") { dialog, _ ->
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                val uri = Uri.fromParts("package", packageName, null)
-                intent.data = uri
-                startActivity(intent)
+                goToAppSettings()
                 dialog.dismiss()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
@@ -84,4 +83,11 @@ class MainActivity : AppCompatActivity() {
             }
             .show()
     }
+    private fun goToAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
+    }
+
 }

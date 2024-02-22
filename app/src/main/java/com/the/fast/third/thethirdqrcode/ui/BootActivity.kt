@@ -7,6 +7,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.LinearInterpolator
+import androidx.core.animation.addListener
 import com.the.fast.third.thethirdqrcode.databinding.ActivityGuideBinding
 
 class BootActivity : AppCompatActivity() {
@@ -18,7 +19,7 @@ class BootActivity : AppCompatActivity() {
         setContentView(binding.root)
         startCountdown()
     }
-    private fun startCountdown() {
+    private fun startCountdown2() {
         val animator = ValueAnimator.ofInt(0, 100)
         animator.duration = 2000
         animator.interpolator = LinearInterpolator()
@@ -34,4 +35,20 @@ class BootActivity : AppCompatActivity() {
         })
         animator.start()
     }
+    private fun startCountdown() {
+        ValueAnimator.ofInt(0, 100).apply {
+            duration = 2000
+            interpolator = LinearInterpolator()
+            addUpdateListener { animation ->
+                val progress = animation.animatedValue as Int
+                binding.progressBarGuide.progress = progress
+            }
+            addListener(onEnd = {
+                startActivity(Intent(this@BootActivity, MainActivity::class.java))
+                finish()
+            })
+            start()
+        }
+    }
+
 }
